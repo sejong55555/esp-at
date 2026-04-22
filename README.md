@@ -66,3 +66,4 @@ Please choose one of the following options based on your needs:
 - The [esp-at forum](https://www.esp32.com/viewforum.php?f=42) is a place to ask questions and find community resources.
 
 - The [ESP Product Selector](https://products.espressif.com/#/product-selector?language=en&names=) is a tool to help you compare different chips or modules.
+ 
