@@ -36,6 +36,10 @@ static int32_t at_uart_write_data(uint8_t *data, int32_t len)
 {
     uint32_t length = 0;
 
+    if (len > 0) {
+        ESP_LOGI(TAG, "[TX] send %d bytes: \"%.*s\"", len, len, (char *)data); //osea
+    }
+
     length = uart_write_bytes(g_at_cmd_port, (char *)data, len);
     return length;
 }
@@ -68,7 +72,11 @@ static int32_t at_uart_read_data(uint8_t *buffer, int32_t len)
             return -1;
         }
     } else {
-        return uart_read_bytes(g_at_cmd_port, buffer, len, portTICK_PERIOD_MS);
+        int32_t ret = uart_read_bytes(g_at_cmd_port, buffer, len, portTICK_PERIOD_MS);
+        if (ret > 0) {
+            ESP_LOGI(TAG, "[RX] read %d bytes: \"%.*s\"", ret, ret, (char *)buffer);//osea
+        }
+        return ret;
     }
 }
 
@@ -113,6 +121,7 @@ retry:
             case UART_DATA:
             case UART_BUFFER_FULL:
                 data_len += event.size;
+                ESP_LOGI(TAG, "[RX] UART_DATA event: size=%d, total_len=%d", event.size, data_len);//osea
                 // we can put all data together to process
                 retry_flag = pdFALSE;
                 while (xQueueReceive(s_at_uart_queue, (void *)&event, 0) == pdTRUE) {
